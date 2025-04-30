@@ -1,5 +1,5 @@
 
-import { icons } from 'lucide-react';
+import * as LucideIcons from 'lucide-react';
 import React from 'react';
 
 interface IconProps {
@@ -17,10 +17,17 @@ const Icon: React.FC<IconProps> = ({
   className = '',
   fallback = 'AlertCircle',
 }) => {
-  const LucideIcon = icons[name as keyof typeof icons] || icons[fallback];
+  // Проверяем, существует ли иконка с таким именем
+  const IconComponent = (LucideIcons as Record<string, React.ComponentType<any>>)[name] || 
+                         (LucideIcons as Record<string, React.ComponentType<any>>)[fallback];
+  
+  if (!IconComponent) {
+    console.warn(`Icon "${name}" not found, fallback "${fallback}" also not found`);
+    return null;
+  }
 
   return (
-    <LucideIcon
+    <IconComponent
       size={size}
       color={color}
       className={className}
